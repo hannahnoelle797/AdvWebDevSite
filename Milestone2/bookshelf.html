@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--UserID 102487291049359825939-->
+<html>
+	<head> 
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" type="text/css" href="hf.css">
+		<title>Milestone 2</title> 
+		<script src = "https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script>	
+			$(document).ready(function(){
+				$.getJSON("https://www.googleapis.com/books/v1/users/102487291049359825939/bookshelves/0/volumes", function(data){
+					var output = "";
+					output += "<div><strong>Number of items: " + data.totalItems + "</strong></div>";
+					output += "<table>";
+					for(var i in data.items)
+					{
+						output += "<tr><td>" + "<div>";
+						output += "<img src=" + data.items[i].volumeInfo.imageLinks.thumbnail + "></div>" + "</td><td>" + "<div>" + data.items[i].volumeInfo.title; 
+						if($.isEmptyObject(data.items[i].volumeInfo.subtitle))
+						{
+							output += "";
+						}
+						else
+						{
+						output += ": " + data.items[i].volumeInfo.subtitle; 
+						}
+						output += "<br>by " + data.items[i].volumeInfo.authors + "<br/>" + "<br/>" + data.items[i].volumeInfo.description + "<br/><br/>" + data.items[i].volumeInfo.publisher + " " + data.items[i].volumeInfo.publishedDate + "<br/><br/>";
+						for(var j in data.items[i].volumeInfo.industryIdentifiers)
+						{
+							output += data.items[i].volumeInfo.industryIdentifiers[j].type + ": " + data.items[i].volumeInfo.industryIdentifiers[j].identifier + "<br />";
+						}
+						output += "<br /><a href=" + data.items[i].volumeInfo.previewLink + ">Preview Book</a><br/>";
+					}
+						output += "</div>" + "</td></tr>";
+					output+="</table>";
+					document.getElementById("tabledata").innerHTML = output;
+				});
+			});
+		</script>
+	</head>
+	<body> 
+		<a style = "position: absolute; top: 10px; left: 10px"; href="milestone2.html">
+			<img src="HOME.png" alt="Go To Home Page" style="width:42px;height:42px;border:0;">
+		</a>
+		<h1 class = "header">My Personal Bookshelf</h1>
+		<div id = "tabledata"></div>
+		<p class = "footer">An Azure hosted webapge for KSU's Advanced Web Development Course with Dr. Lei Li<br/>Created Fall 2018</p>
+	</body>
+</html>

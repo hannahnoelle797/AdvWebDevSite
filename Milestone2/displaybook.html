@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head> 
+		<meta charset="UTF-8" />
+		<title>Google Book Result</title>
+		<link rel="stylesheet" type="text/css" href="hf.css">
+		<script src = "https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script>
+		$(document).ready(function(){
+			var i = window.location.search;
+			var s = i.split("=");
+			var id = s[1];
+			var url = "https://www.googleapis.com/books/v1/volumes/" + id;
+			console.log(url);
+			$.getJSON(url, function(data){
+				var output = "";
+				output += "<div>";
+				output += "<img style = 'padding: 15px; float: left;' src=" + data.volumeInfo.imageLinks.thumbnail + "></div> <div class = 'para'><strong>" + data.volumeInfo.title + "</strong>";
+				if($.isEmptyObject(data.volumeInfo.subtitle))
+					{
+						output += "";
+					}
+					else
+					{
+					output += ": " + data.volumeInfo.subtitle; 
+					}
+				output += "<br>by " + data.volumeInfo.authors + "<br/><br/>";
+				if($.isEmptyObject(data.volumeInfo.description))
+				{
+					output += "No Description Provided";
+				}
+				else
+				{
+					output += data.volumeInfo.description;
+				}
+				output += "<br/>" + data.volumeInfo.publisher + " " + data.volumeInfo.publishedDate + "<br/><br/>";
+				for(var j in data.volumeInfo.industryIdentifiers)
+				{
+					output += data.volumeInfo.industryIdentifiers[j].type + " " + data.volumeInfo.industryIdentifiers[j].identifier + "<br />";
+				}
+				output += "<br /><a href=" + data.volumeInfo.previewLink + ">Preview Book</a><br/>";
+				output += "<br/>Page Count: " + data.volumeInfo.pageCount + "<br/><br/>";
+				output += "Maturity Rating: " + data.volumeInfo.maturityRating + "<br/><br/>";
+				output += "<strong>Relevant Categories:</strong><br/>";
+				for(var m in data.volumeInfo.categories)
+				{
+					output += data.volumeInfo.categories + "<br />";
+				}
+				output += "</div>";
+				document.getElementById("tabledata").innerHTML = output;
+			});
+		});
+		</script>
+	</head>
+	<body> 
+		<a style = "position: absolute; top: 10px; left: 10px"; href="milestone2.html">
+			<img src="HOME.png" alt="Go To Home Page" style="width:42px;height:42px;border:0;">
+		</a>
+		<h1 class = "header">Google Book Information</h1>
+		<div id = "tabledata"></div>
+		<p class = "footer">An Azure hosted webapge for KSU's Advanced Web Development Course with Dr. Lei Li<br/>Created Fall 2018</p>
+	</body>
+</html>

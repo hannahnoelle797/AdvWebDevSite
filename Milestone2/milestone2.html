@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head> 
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" type="text/css" href="hf.css">
+		<title>Milestone 2</title> 
+		<script src = "https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script>	
+		$(document).ready(function(){
+			var input = document.getElementById("q");
+			input.addEventListener("keydown", function(e){ if(e.keyCode === 13) displaydata();});
+			$("#sb").click(function(){ displaydata(); });
+			$("#o").change(function() { displaydata(); });
+			
+			function displaydata(){
+				var q = document.getElementById("q").value;
+				var s = document.getElementById("o").value;
+				var start;
+				if(s == 1)
+					start = 0;
+				else if(s == 2)
+					start = 20;
+				else
+					start = 40
+				q = q.replace(/\s/g,"%20");
+				var url = "https://www.googleapis.com/books/v1/volumes?q=" + q + "&startIndex=" + start + "&maxResults=20";
+				console.log(url);
+				$.getJSON(url, function(data){
+					var output = "";
+					output += "<table>";
+					for(var i in data.items)
+					{
+						output += "<tr><td>" + "<div>";
+						output += "<img src=";
+						try {output += data.items[i].volumeInfo.imageLinks.thumbnail;
+						}
+						catch(err) {
+							output += "https://books.google.com/googlebooks/images/no_cover_thumb.gif width = '130'";
+						}
+						output += "></div>" + "</td><td>" + "<div>" + data.items[i].volumeInfo.title; 
+						if($.isEmptyObject(data.items[i].volumeInfo.subtitle))
+						{
+							output += "";
+						}
+						else
+						{
+						output += ": " + data.items[i].volumeInfo.subtitle; 
+						}
+						output += "<br>by " + data.items[i].volumeInfo.authors + "<br/>" + "<br/>" + data.items[i].volumeInfo.description + "<br/><br/>" + data.items[i].volumeInfo.publisher + " " + data.items[i].volumeInfo.publishedDate + "<br/><br/>";
+						for(var j in data.items[i].volumeInfo.industryIdentifiers)
+						{
+							output += data.items[i].volumeInfo.industryIdentifiers[j].type + ": " + data.items[i].volumeInfo.industryIdentifiers[j].identifier + "<br />";
+						}
+						output += "<br /><a href='./displaybook.html?s=" + data.items[i].id + "' target='_blank'>Preview Book</a><br/>";
+					}
+					output += "</div>" + "</td></tr>";
+					output += "</table>";
+					document.getElementById("tabledata").innerHTML = output;
+				});
+			}
+		});
+		</script>
+	</head>
+	<body> 
+		<a style = "position: absolute; top: 10px; left: 10px"; href="hostingstart.html">
+			<img src="HOME.png" alt="Go To Home Page" style="width:42px;height:42px;border:0;">
+		</a>
+		<a style = "position: absolute; top: 5%; right: 5%"; href="bookshelf.html">My Bookshelf</a>
+		<h1 class = "header">Search</h1>
+		<div class = "searchbox">
+			<input type = "text" name = "q" id = "q" autofocus placeholder = "Search..." size = "50">
+			<button type = "search" id="sb">Search</button>
+		</div>
+		<select id = 'o'>
+			<option value = '1'>Go To Page 1</option>
+			<option value = '2'>Go To Page 2</option>
+			<option value = '3'>Go To Page 3</option>
+		</select>
+		<div id = "tabledata"></div>	
+		<p class = "footer">An Azure hosted webapge for KSU's Advanced Web Development Course with Dr. Lei Li<br/>Created Fall 2018</p>
+	</body>
+</html>
